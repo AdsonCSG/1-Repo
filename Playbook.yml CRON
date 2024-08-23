@@ -1,0 +1,21 @@
+- name: Automação de Backup no Pfsense com Cron às 22:00
+  hosts: servers
+  gather_facts: yes
+  become: yes
+
+  vars:
+    ansible_python_interpreter: /usr/local/bin/python3.11
+#    script_path: /usr/local/scripts/backup.sh
+
+  tasks:
+    - name: Executar Script de Backup
+      command: /usr/local/scripts/backup.sh
+
+    - name: Configurar CRON para automação do backup às 22:00
+      ansible.builtin.cron:
+        name: "Backup diário do Pfsense"
+        minute: "56"
+        hour: "18"
+        job: "/home/leste/ansible/pfsense2-backup.yml"
+        user: root
+        
