@@ -1,0 +1,14 @@
+---
+- name: Trocar senha de usuário em múltiplos servidores
+  hosts: all
+  become: yes
+  vars:
+    user_name: "usuario_alvo"    # Nome do usuário cujo a senha será alterada
+    new_password: "nova_senha"    # Nova senha a ser definida
+
+  tasks:
+    - name: Garantir que o usuário existe
+      ansible.builtin.user:
+        name: "{{ user_name }}"
+        password: "{{ new_password | password_hash('sha512') }}"
+      when: user_name is defined and new_password is defined
